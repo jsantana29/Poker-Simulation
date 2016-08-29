@@ -35,14 +35,18 @@ public class Poker {
                 Player p1 = new Player();
                 Player p2 = new Player();
                 
-                System.out.println("Player 1 hand:");
-                p1.drawHand();            
+                p1.drawHand();
+                p2.drawHand();
+                
+                p1.drawHand();
+                p2.drawHand();
+                
+                System.out.println("Player 1 hand:");       
                 p1.displayHand();
             
                 System.out.println("_____________________________________");
             
-                System.out.println("Player 2 hand:");
-                p2.drawHand();           
+                System.out.println("Player 2 hand:");          
                 p2.displayHand();
                 
                 System.out.println("_____________________________________");
@@ -79,29 +83,33 @@ public class Poker {
                 
                 d.checkPairs(p1.getHand(), p1);
                 d.checkPairs(p2.getHand(), p2);
+                //System.out.println("1");
                 
                 d.checkOfKind(p1.getHand(), p1);
                 d.checkOfKind(p2.getHand(), p2);
+                //System.out.println("1");
                 
                 d.checkFlush(p1.getHand(), p1);
                 d.checkFlush(p2.getHand(), p2);
+                //System.out.println("1");
                 
                 d.checkStraight(p1.getHand(), p1);
                 d.checkStraight(p2.getHand(), p2);
+                //System.out.println("1");
                 
                 d.checkFullHouse(p1);
                 d.checkFullHouse(p2);
+                //System.out.println("1");
+                
+                d.checkStraightFlush(p1.getHand(), p1);
+                d.checkStraightFlush(p2.getHand(), p2);
+                //System.out.println("1");
                 
                 System.out.println("Player 1: Full House: "+p1.isFullHouse()+", Straight: "+p1.isStraight()+", Flush: "+p1.isFlush()+", Four of a kind: "+p1.isFourOfAKind()+", Three of a kind: "+p1.isThreeOfAKind()+" , Two pair = "+p1.isTwoPairs()+", Pair = "+p1.isPairs());
                 System.out.println("Player 2: Full House: "+p2.isFullHouse()+", Straight: "+p2.isStraight()+", Flush: "+p2.isFlush()+", Four of a kind: "+p2.isFourOfAKind()+", Three of a kind: "+p2.isThreeOfAKind()+" , Two pair = "+p2.isTwoPairs()+", Pair = "+p2.isPairs());
+                               
                 
-//                System.out.println(d.checkPairs(p1.getHand(),p1.getPairStrength(),p1.getName()));
-//                System.out.println(d.checkPairs(p2.getHand(),p2.getPairStrength(),p2.getName()));
-                
-                //String option = JOptionPane.showInputDialog("Press any button to play again\nPress n to exit");
-                
-                
-                if(p1.isFullHouse() || p2.isFullHouse()){
+                if(p1.isStraightFlush() || p2.isStraightFlush()){
                     runtimeCounter++;
                     System.out.println(runtimeCounter);
                     running = false;
@@ -124,6 +132,7 @@ public class Poker {
         
     }
     
+    //Gives each royal card their respective name
     public static String cardName(Integer value){
         if(value == 1){
             return "Ace";
@@ -143,6 +152,7 @@ public class Poker {
              
     }
     
+    //Generates all 52 cards and sends them to the Dealer to stack them in the deck
     public static void cardGenerator(){
         Dealer d = new Dealer();
                       

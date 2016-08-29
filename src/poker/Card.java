@@ -10,7 +10,7 @@ package poker;
  *
  * @author Jean
  */
-public class Card {
+public class Card implements Comparable {
     private String suit;
     private int value;
 
@@ -39,6 +39,13 @@ public class Card {
     public void setValue(int value) {
         this.value = value;
     }
+
+    @Override
+    public int compareTo(Object t) {
+        int compareValue = ((Card)t).getValue();
+        return this.value-compareValue;
+    }
+
     
     
     

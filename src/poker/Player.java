@@ -31,6 +31,7 @@ public class Player {
     private boolean flush;
     private boolean straight;
     private boolean fullHouse;
+    private boolean straightFlush;
     
     public Player(){
         this.cash = 500;
@@ -44,16 +45,15 @@ public class Player {
     
     public void drawHand(){
         try{
-            for(int i = 1; i<=HAND_LIMIT;i++){
-                Card playerCards = d.drawCard();
-                hand.add(playerCards);
-            }   
+            Card playerCards = d.drawCard();
+            hand.add(playerCards);  
         }
         catch(NullPointerException e){
             System.out.println(e);
         }        
     }
     
+   //Displays the player's hand
     public void displayHand(){
         System.out.println(Poker.cardName(hand.get(0).getValue())+" of "+hand.get(0).getSuit());
         System.out.println(Poker.cardName(hand.get(1).getValue())+" of "+hand.get(1).getSuit());
@@ -148,6 +148,16 @@ public class Player {
     public void setFullHouse(boolean fullHouse) {
         this.fullHouse = fullHouse;
     }
+
+    public boolean isStraightFlush() {
+        return straightFlush;
+    }
+
+    public void setStraightFlush(boolean straightFlush) {
+        this.straightFlush = straightFlush;
+    }
+    
+    
     
     
     

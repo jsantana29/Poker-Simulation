@@ -7,6 +7,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Stack;
 import javax.swing.JOptionPane;
@@ -19,7 +20,8 @@ public class Dealer {
     private static Stack<Card> deck = new Stack();
     private ArrayList<Card> flop;
     private ArrayList<Card> communityCards;
-    private ArrayList<Integer> totalValuePool;
+    private ArrayList<Card> totalValuePool;
+    private ArrayList<Card> straight;
     private Card turn;
     private Card river;
     
@@ -29,6 +31,7 @@ public class Dealer {
         flop = new ArrayList<>();
         communityCards = new ArrayList<>();
         totalValuePool = new ArrayList<>();
+        straight = new ArrayList<>();
     }
     
     @Override
@@ -36,6 +39,7 @@ public class Dealer {
         return "Deck{" + "deck=" + deck + '}';
     }
     
+    //Makes a card object and puts it inside the deck
     public void makeCard(String suit, int value){
          Card card = new Card(suit, value);
          fillDeck(card);
@@ -45,6 +49,7 @@ public class Dealer {
         deck.push(cardsInDeck);
     }
     
+    //Displays the entire deck
     public void displayDeck(){
         int fullDeckCount = deck.size();
         for(int i = 0; i<fullDeckCount;i++){
@@ -52,6 +57,7 @@ public class Dealer {
         }
     }
     
+    //Shuffles the entire deck
     public void shuffle(){
         Random r = new Random();
         Stack<Card> shuffleDeck = new Stack();
@@ -65,26 +71,30 @@ public class Dealer {
         deck = shuffleDeck;
     }
     
+    //Draws a card from the top of the deck
     public Card drawCard(){
         Card drawnCard = deck.pop();
         return drawnCard;
     }
     
-     
+     //Draws the three cards that make up the flop
     public void setFlop(){
         for(int i = 1; i <= 3;i++){
             flop.add(drawCard());
         }
     }
     
+    //Randomly draws the card that represents the turn from the top of the deck
     public void setTurn(){
         turn = drawCard();
     }
     
+    //Randomly draws the card that represents the river from the top of the deck
     public void setRiver(){
         river = drawCard();
     }
     
+    //Displays the flop
     public void displayFlop(){
         for(int i = 0; i < flop.size(); i++){
             System.out.println(Poker.cardName(flop.get(i).getValue())+" of "+flop.get(i).getSuit());
@@ -99,6 +109,7 @@ public class Dealer {
         System.out.println(Poker.cardName(river.getValue())+" of "+river.getSuit());
     }
     
+    //Gives the Ace card its proper value for this game
     public int checkAceValue(int value){
         if(value == 1){
             return value + 13;
@@ -106,6 +117,7 @@ public class Dealer {
         return value;
     }
     
+    //Pools together all of the community cards(flop, turn, and river)
     public void poolCommunityCards(ArrayList<Card>flop,Card turn, Card river){
         for(int i = 0; i<flop.size(); i++){
             communityCards.add(flop.get(i));
@@ -114,6 +126,7 @@ public class Dealer {
         communityCards.add(river);
     }
     
+    //Checks which player has the highest single card value
     public int checkHighCard(ArrayList<Card>hand1, ArrayList<Card>hand2){
         final int TOTAL_CARDS = 4;
         ArrayList<Integer> scorePool = new ArrayList<>();
@@ -131,12 +144,20 @@ public class Dealer {
         int highest = 0;
         int secondHighest = 0;
         
-        for(int i = 0; i < TOTAL_CARDS; i++){
+        for(int i = 0; i < scorePool.size(); i++){
             if(scorePool.get(i)> highest){
-                secondHighest = highest;
                 highest = scorePool.get(i);
             }
         }
+        
+        scorePool.remove(scorePool.indexOf(highest));
+        
+        for(int i = 0; i < scorePool.size(); i++){
+            if(scorePool.get(i)> secondHighest){
+                secondHighest = scorePool.get(i);
+            }
+        }
+        
         
         if(highest == hand1ScoreValue1 || highest == hand1ScoreValue2 && highest != hand1ScoreValue1 || highest != hand1ScoreValue2){
             return 1;
@@ -157,10 +178,11 @@ public class Dealer {
         }
     }
     
+    //Checks to see if the player has pairs
     public void checkPairs(ArrayList<Card>hand, Player p){
-        int pairCounter = 0;
-        int communityPair = 0;
-        int totalPairs = 0;
+        int pairCounter = 0; //Counts how many pairs have been formed using the player's hand
+        int communityPair = 0; //Counts how many pairs have been formed using only the community pool
+        int totalPairs = 0; // Counts the total amount of pairs that have been formed
         
         final int firstCard = 0;
         final int secondCard = 1;
@@ -198,6 +220,7 @@ public class Dealer {
         }
     }
     
+    //Checks if the player already has a pair in their hand
     public int checkHandPair(ArrayList<Card>hand, Player p, int pairCounter){
         if(hand.get(0).getValue() == hand.get(1).getValue()){
             pairCounter++;
@@ -209,6 +232,7 @@ public class Dealer {
         return pairCounter;
     }
     
+    //Checks if a card from the player's hand can form a pair with a card from the community pool
     public int checkCombinedPair(Card card, Player p, int handPairCounter){
         for(int i = 0; i < communityCards.size(); i++){
             if(card.getValue() == communityCards.get(i).getValue()){
@@ -225,6 +249,7 @@ public class Dealer {
         return handPairCounter;
     }
     
+    //Checks if there is already a pair inside the community pool
     public int checkCommunityPair(Player p, int handPairCounter, int communityPair){
         for(int i = 0; i < communityCards.size(); i++){
             Card check = communityCards.remove(i);
@@ -243,6 +268,7 @@ public class Dealer {
         return communityPair;
     }
     
+    //Counts all of the valid pairs the player has created using both his hand and the community pool
     public int calculateTotalPairs(int handPairCounter, int communityPair){
         if(handPairCounter > 0){
             return handPairCounter + communityPair;
@@ -252,6 +278,7 @@ public class Dealer {
         }
     }
     
+    //Checks if the player has formed three or more cards of the same value using their hand and the community pool
     public void checkOfKind(ArrayList<Card>hand, Player p){
         int kindCounter = 1;
         final int firstCard = 0;
@@ -285,6 +312,7 @@ public class Dealer {
            
     }
     
+    //Checks if both cards in the player's hand have the same value
     public int checkHandKind(ArrayList<Card>hand, Player p, int kindCounter){
          if(hand.get(0).getValue() == hand.get(1).getValue()){
             kindCounter ++;
@@ -293,6 +321,7 @@ public class Dealer {
          return kindCounter;
     }
     
+    //Checks if a card from the player's hand has the same value as the ones in the community pool
     public int checkCombinedKind(Card card, Player p, int kindCounter){
         int ofAKind = kindCounter;
         
@@ -300,7 +329,6 @@ public class Dealer {
             ofAKind = 1;
         }
         
-               
         for(int i = 0; i < communityCards.size(); i++){
             if(card.getValue() == communityCards.get(i).getValue()){
                 ofAKind++;
@@ -312,6 +340,7 @@ public class Dealer {
             
         }
        
+        //If true, then no three or four of a kind was ever found. Else, it was found and the counter is updated
         if(ofAKind < 3){
             return kindCounter;
         }
@@ -322,6 +351,7 @@ public class Dealer {
         
     }
     
+    //Checks if at least five cards from both the player's hand and the community pool have the same suit
     public void checkFlush(ArrayList<Card>hand, Player p){
         int flushCounter = 1;
         final int firstCard = 0;
@@ -350,6 +380,7 @@ public class Dealer {
         
     }
     
+    //Checks if both cards from the player's hand have the same suit
     public int checkHandFlush(ArrayList<Card>hand, int flushCounter){
         if(hand.get(0).getSuit().equalsIgnoreCase(hand.get(1).getSuit())){
             flushCounter ++;
@@ -358,6 +389,7 @@ public class Dealer {
          return flushCounter;
     }
     
+    //Compares a card's suit from the player's hand to the entire communtiy pool     
     public int checkCombinedFlush(Card card, Player p, int flushCounter){
         int miniFlushCounter = flushCounter;
         
@@ -383,6 +415,7 @@ public class Dealer {
         }
     }
     
+    //Checks if at least five cards have consecutive card values(ex. 5,6,7,8,9)
     public void checkStraight(ArrayList<Card>hand, Player p){
         final int firstCard = 0;
         final int secondCard = 1;
@@ -403,6 +436,7 @@ public class Dealer {
         
     }
     
+    //Checks if any card in the player's hand has a chance of forming a straight with the community pool
     public boolean verifyStraightChance(Card card){
         for(int i = 0; i < communityCards.size(); i++){
             if(card.getValue() + 1 == communityCards.get(i).getValue() || card.getValue() - 1 == communityCards.get(i).getValue()){
@@ -412,29 +446,44 @@ public class Dealer {
         return false;
     }
     
+    //Checks if the straight between the player's hand and the community pool is actually formed
     public boolean verifyStraight(ArrayList<Card>hand, Player p){
         int straightCounter = 0;
         
-        fillTotalPool(hand);
-        totalValuePool.sort(null);
+        fillTotalValuePool(hand);
+        Collections.sort(totalValuePool);
         
-        for(int i = 0; i < totalValuePool.size(); i++){
-            if(totalValuePool.get(i) == END_OF_POOL){
-                break;
-            }
-            
-            if(totalValuePool.get(i) + 1 == totalValuePool.get(i + 1)){
+        for(int i = 0; i < totalValuePool.size() - 1; i++){
+            System.out.println(totalValuePool.get(i)+ " " + p.getName());
+            if(totalValuePool.get(i).getValue() + 1 == totalValuePool.get(i + 1).getValue()){
+                    straight.add(totalValuePool.get(i));
+                    
+                    if(i == totalValuePool.size() - 1){
+                        straight.add(totalValuePool.get(i+1));
+                        straightCounter++;
+                    }
+                    
                     straightCounter++;
-                }
-            else if(totalValuePool.get(i+1) == END_OF_POOL){
-                    straightCounter = straightCounter;
+                    
+   
                 }
             else{
                 straightCounter = 0;
+                clearStraight();
             }
         }
         
-        if(straightCounter >= 4){
+        
+        if(straightCounter == 5){            
+            return true;
+        }
+        else if(straightCounter == 6){
+            straight.remove(0);
+            return true;
+        }
+        else if(straightCounter == 7){
+            straight.remove(0);
+            straight.remove(1);
             return true;
         }
         else{
@@ -443,6 +492,7 @@ public class Dealer {
   
     }
     
+    //Checks if a full house is formed(a pair with a three of a kind)
     public void checkFullHouse(Player p){
         if(p.isPairs() && p.isThreeOfAKind() && p.getPairStrength() != p.getKindStrength()){
             p.setFullHouse(true);
@@ -452,37 +502,74 @@ public class Dealer {
         }
     }
     
-    public void fillTotalPool(ArrayList<Card>hand){
+    public void checkStraightFlush(ArrayList<Card>hand,Player p){
+        poolCommunityCards(flop,turn,river);
+        int flushCounter = 0;
+        
+        
+        if(straight.size() > 0){
+             String lastSuit = straight.get(0).getSuit();
+             
+             for(int i = 0; i < straight.size(); i++){
+                if(straight.get(i).getSuit().contains(lastSuit)){
+                    flushCounter++;
+
+                }
+               
+            }
+             System.out.println(straight.size());
+        }
+        
+    
+            if(flushCounter >= 5){
+                p.setStraightFlush(true);
+                clearStraight();
+            }
+            else{
+                p.setStraightFlush(false);
+                clearStraight();
+            }
+        }
+    
+    
+    
+    //Pools together all the values in the player's hand with all the values inside the community pool
+    public void fillTotalValuePool(ArrayList<Card>hand){
         for(int i = 0; i < hand.size(); i++){
-            totalValuePool.add(hand.get(i).getValue());
+            totalValuePool.add(hand.get(i));
         }
         
         for(int i = 0; i < communityCards.size(); i++){
-            totalValuePool.add(communityCards.get(i).getValue());
+            totalValuePool.add(communityCards.get(i));
         }
         
-        totalValuePool.add(END_OF_POOL);
+
     }
     
     
-    
-    
-    
-    
+    //Clears the entire deck
     public void clearDeck(){
         deck.clear();
     }
     
+    //Clears the flop
     public void clearFlop(){
         flop.clear();
     }
     
+    //Clears the entire commmunity pool
     public void clearCommunityCards(){
         communityCards.clear();
     }
     
+    //Clears the entire total value pool
     public void clearTotalValuePool(){
         totalValuePool.clear();
+    }
+    
+    
+    public void clearStraight(){
+        straight.clear();
     }
 
     
