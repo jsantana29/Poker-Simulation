@@ -32,6 +32,7 @@ public class Player {
     private boolean straight;
     private boolean fullHouse;
     private boolean straightFlush;
+    private boolean royalFlush;
     
     public Player(){
         this.cash = 500;
@@ -43,7 +44,7 @@ public class Player {
         hand = new ArrayList<>();
     }
     
-    public void drawHand(){
+    public void drawCard(){
         try{
             Card playerCards = d.drawCard();
             hand.add(playerCards);  
@@ -155,6 +156,18 @@ public class Player {
 
     public void setStraightFlush(boolean straightFlush) {
         this.straightFlush = straightFlush;
+    }
+
+    public boolean isRoyalFlush() {
+        return royalFlush;
+    }
+
+    public void setRoyalFlush(boolean royalFlush) {
+        this.royalFlush = royalFlush;
+    }
+    
+    public void takeCard(Card c){
+        hand.add(c);
     }
     
     
