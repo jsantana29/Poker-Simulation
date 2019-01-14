@@ -47,7 +47,6 @@ public class Poker {
             
             d.shuffle();
             d.displayDeck();
-            System.out.println("Size of deck: "+ d.getDeck().size());
             System.out.println("_____________________________________");
 
             try {               
@@ -122,19 +121,16 @@ public class Poker {
                 System.out.println("Player 1: " + p1.isRoyalFlush() + ", Straight Flush: " + p1.isStraightFlush() + ", Full House: " + p1.isFullHouse() + ", Straight: " + p1.isStraight() + ", Flush: " + p1.isFlush() + ", Four of a kind: " + p1.isFourOfAKind() + ", Three of a kind: " + p1.isThreeOfAKind() + " , Two pair = " + p1.isTwoPairs() + ", Pair = " + p1.isPairs());
                 System.out.println("Player 2: " + p2.isRoyalFlush() + ", Straight Flush: " + p2.isStraightFlush() + ", Full House: " + p2.isFullHouse() + ", Straight: " + p2.isStraight() + ", Flush: " + p2.isFlush() + ", Four of a kind: " + p2.isFourOfAKind() + ", Three of a kind: " + p2.isThreeOfAKind() + " , Two pair = " + p2.isTwoPairs() + ", Pair = " + p2.isPairs());
 
-                if (p1.isStraight() || p2.isStraight()) {
+                if (runtimeCounter == 100) {
                     runtimeCounter++;
                     running = false;
                 }
 
                 d.returnHand(p1);
-                System.out.println("Number of cards in deck after p1: "+d.getDeck().size());
                 d.returnHand(p2);
-                System.out.println("Number of cards in deck after p2: "+d.getDeck().size());
                 d.returnCommunityCards();
-                System.out.println("Number of cards in deck after community: "+d.getDeck().size());
                 d.returnBurnedCards();
-                System.out.println("Number of cards in deck after burn: "+d.getDeck().size());
+                System.out.println(d.getDeck().size());
                 runtimeCounter++;
 
             } catch (NullPointerException e) {

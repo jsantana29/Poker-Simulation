@@ -441,12 +441,9 @@ public class Dealer {
     //Checks if the straight between the player's hand and the community pool is actually formed
     public boolean verifyStraight(ArrayList<Card> hand, Player p) {
         int straightCounter = 0;
-        boolean foundStraight = false;
-        int mostConsecutive = 0;
 
         fillTotalValuePool(hand);
         Collections.sort(totalValuePool);
-        System.out.println("Value pool contents: "+totalValuePool);
         
 
         for (int i = 0; i < totalValuePool.size() - 1; i++) {
@@ -455,39 +452,24 @@ public class Dealer {
 
                 if (i == totalValuePool.size() - 2) {
                     straight.add(totalValuePool.get(i + 1));
-                    //straightCounter++;
                 }
 
                 straightCounter++;
- 
-                if(straightCounter >= 5){
-                    
-                    if(i == 3 || i == 4){
-                        straight.add(totalValuePool.get(i+1));
-                    }
-                    
-                    foundStraight = true;
-                    //straight.add(totalValuePool.get(i+1));
-                    mostConsecutive = straightCounter;
-                }
-                
-                
+
+
             } else {
                 straightCounter = 1;
-                if(!foundStraight){
-                    clearStraight();
-                }
-                
+                clearStraight();
             }
         }
         
 
-        if (mostConsecutive == 5) {
+        if (straightCounter == 5) {
             return true;
-        } else if (mostConsecutive == 6) {
+        } else if (straightCounter == 6) {
             straight.remove(0);
             return true;
-        } else if (mostConsecutive == 7) {
+        } else if (straightCounter == 7) {
             straight.remove(0);
             straight.remove(1);
             return true;
@@ -538,9 +520,6 @@ public class Dealer {
     public void checkRoyalFlush(Player p) {
         int startRoyal = 10;
         int royalCounter = 0;
-        boolean lowestRoyal = false;
-        
-        
 
         for (int i = 0; i < straight.size(); i++) {
             if (startRoyal == straight.get(i).getValue()) {
@@ -550,8 +529,6 @@ public class Dealer {
                 break;
             }
         }
-        
-        
 
         if (royalCounter >= 5) {
             p.setRoyalFlush(true);
@@ -611,10 +588,8 @@ public class Dealer {
     }
     
     public void returnBurnedCards(){
-        System.out.println("These are the burned cards: "+burnedCards.get(0)+" "+burnedCards.get(1)+" "+burnedCards.get(2));
-        int burnSize = burnedCards.size();
-        for(int i = 0; i < burnSize; i++){
-            deck.push(burnedCards.remove(0));
+        for(int i = 0; i < burnedCards.size(); i++){
+            deck.push(burnedCards.remove(i));
         }
     }
 
