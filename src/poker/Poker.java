@@ -43,6 +43,8 @@ public class Poker {
         int runtimeCounter = 0;
         boolean running = true;
         
+       
+        
         while (running) {
             
             d.shuffle();
@@ -93,8 +95,10 @@ public class Poker {
 
                 if (d.checkHighCard(p1.getHand(), p2.getHand()) == 1) {
                     System.out.println("Player 1 has the highest single card!");
+                    p1.setHighCard(true);
                 } else if (d.checkHighCard(p1.getHand(), p2.getHand()) == 2) {
                     System.out.println("Player 2 has the highest single card!");
+                    p2.setHighCard(false);
                 } else {
                     System.out.println("It's a tie!");
                 }
@@ -122,28 +126,37 @@ public class Poker {
                 System.out.println("Player 1: " + p1.isRoyalFlush() + ", Straight Flush: " + p1.isStraightFlush() + ", Full House: " + p1.isFullHouse() + ", Straight: " + p1.isStraight() + ", Flush: " + p1.isFlush() + ", Four of a kind: " + p1.isFourOfAKind() + ", Three of a kind: " + p1.isThreeOfAKind() + " , Two pair = " + p1.isTwoPairs() + ", Pair = " + p1.isPairs());
                 System.out.println("Player 2: " + p2.isRoyalFlush() + ", Straight Flush: " + p2.isStraightFlush() + ", Full House: " + p2.isFullHouse() + ", Straight: " + p2.isStraight() + ", Flush: " + p2.isFlush() + ", Four of a kind: " + p2.isFourOfAKind() + ", Three of a kind: " + p2.isThreeOfAKind() + " , Two pair = " + p2.isTwoPairs() + ", Pair = " + p2.isPairs());
 
+                runtimeCounter++;
+                System.out.println("Game number: "+runtimeCounter);
+                
+                p1.addToCounters();
+                p2.addToCounters();
+                
                 if (p1.isStraight() || p2.isStraight()) {
-                    runtimeCounter++;
+                    
                     running = false;
                 }
 
                 d.returnHand(p1);
-                System.out.println("Number of cards in deck after p1: "+d.getDeck().size());
+                //System.out.println("Number of cards in deck after p1: "+d.getDeck().size());
                 d.returnHand(p2);
-                System.out.println("Number of cards in deck after p2: "+d.getDeck().size());
+                //System.out.println("Number of cards in deck after p2: "+d.getDeck().size());
                 d.returnCommunityCards();
-                System.out.println("Number of cards in deck after community: "+d.getDeck().size());
+                //System.out.println("Number of cards in deck after community: "+d.getDeck().size());
                 d.returnBurnedCards();
-                System.out.println("Number of cards in deck after burn: "+d.getDeck().size());
-                runtimeCounter++;
+                //System.out.println("Number of cards in deck after burn: "+d.getDeck().size());
+                
 
             } catch (NullPointerException e) {
                 System.out.println(e);
             }
 
-            System.out.println(runtimeCounter);
+            
 
         }
+        
+        p1.displayPlayerStats();
+        p2.displayPlayerStats();
     }
     
     public static void editorMode(Player p1, Player p2, Dealer d){
@@ -213,6 +226,8 @@ public class Poker {
                 d.returnHand(p2);
                 d.returnCommunityCards();
                 System.out.println(d.getDeck().size());
+                
+                
     }
 
     //Gives each royal card their respective name

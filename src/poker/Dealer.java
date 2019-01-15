@@ -446,7 +446,7 @@ public class Dealer {
 
         fillTotalValuePool(hand);
         Collections.sort(totalValuePool);
-        System.out.println("Value pool contents: "+totalValuePool);
+        //System.out.println("Value pool contents: "+totalValuePool);
         
 
         for (int i = 0; i < totalValuePool.size() - 1; i++) {
@@ -510,7 +510,7 @@ public class Dealer {
 
     public void checkStraightFlush(Player p) {
         poolCommunityCards(flop, turn, river);
-        System.out.println(straight);
+        //System.out.println(straight);
         int flushCounter = 0;
 
         if (straight.size() > 0) {
@@ -519,13 +519,13 @@ public class Dealer {
             for (int i = 0; i < straight.size(); i++) {
                 if (straight.get(i).getSuit() == lastSuit) {
                     flushCounter++; 
-                    System.out.println("pls");
+                    //System.out.println("pls");
 
                 }
 
             }
         }
-        System.out.println(flushCounter);
+        //System.out.println(flushCounter);
 
         if (flushCounter >= 5) {
             p.setStraightFlush(true);
@@ -607,11 +607,11 @@ public class Dealer {
             deck.push(flop.remove(0));
         }
 
-        System.out.println("flop size: " + flop.size());
+        //System.out.println("flop size: " + flop.size());
     }
     
     public void returnBurnedCards(){
-        System.out.println("These are the burned cards: "+burnedCards.get(0)+" "+burnedCards.get(1)+" "+burnedCards.get(2));
+        //System.out.println("These are the burned cards: "+burnedCards.get(0)+" "+burnedCards.get(1)+" "+burnedCards.get(2));
         int burnSize = burnedCards.size();
         for(int i = 0; i < burnSize; i++){
             deck.push(burnedCards.remove(0));
